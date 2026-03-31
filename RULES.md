@@ -8,7 +8,9 @@ Core rules for AI-assisted Godot game development. Follow these unless a project
 
 - Use **Godot 4.5+** standard edition (NOT .NET). HTML5 export is unstable in .NET builds.
 - Install the **godot-mcp-bridge** plugin ([github.com/st1lbno/godot-mcp-bridge](https://github.com/st1lbno/godot-mcp-bridge)) for AI visibility into the running game.
-- The MCP bridge listens on a configurable port (default **9001**). Each project should use a unique port if multiple projects run simultaneously.
+- The MCP bridge **auto-selects an available port** from 9001-9020. No manual port configuration needed.
+- Multiple Godot games can run simultaneously — each gets its own port automatically.
+- Port files are written to `<project>/.godot/mcp_port` and `/tmp/godot_mcp_<name>.port` for discovery.
 - Add the MCP server to Claude Code global settings (`~/.claude/settings.json`).
 - For pixel art projects, set `default_texture_filter=0` (Nearest) in Project Settings to avoid blurry sprites.
 
@@ -49,7 +51,8 @@ Core rules for AI-assisted Godot game development. Follow these unless a project
 - Use **get_game_state** / **get_grid_state** for programmatic state inspection.
 - Use **execute_gdscript** to run arbitrary code in the live game (toggle bot, inspect nodes, change settings).
 - Use **simulate_click** / **simulate_key** for input injection.
-- The WebSocket connects to `localhost` on the configured port.
+- The MCP server auto-discovers the Godot port (env var > `.godot/mcp_port` > `/tmp/godot_mcp_*.port` scan > fallback 9001).
+- Use **discover** to list all running Godot MCP instances and **connect_to** to switch between them.
 - `NODE_PATH=$(npm root -g)` is needed for the `ws` module when using manual node commands.
 - Screenshots are saved to `/tmp/` (configurable) — use the Read tool to view them.
 
